@@ -1,0 +1,6 @@
+{
+  "name": "Radar Político Brasil",
+  "description": "Consulte o perfil completo de políticos brasileiros: partido, espectro político, situação de candidatura, cargo ocupado e últimos projetos de lei apresentados.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
