@@ -1,10 +1,11 @@
 import React from 'react';
-import { Landmark, GitCompare, Bookmark, ExternalLink, ShieldCheck, Vote } from 'lucide-react';
+import { Landmark, GitCompare, Bookmark, ExternalLink, ShieldCheck, Vote, Users } from 'lucide-react';
 
 interface NavbarProps {
   onOpenCompare: () => void;
   onOpenBookmarks: () => void;
   onOpenConsultarVoto?: () => void;
+  onOpenCandidatos?: () => void;
   bookmarksCount: number;
 }
 
@@ -12,14 +13,19 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenCompare,
   onOpenBookmarks,
   onOpenConsultarVoto,
+  onOpenCandidatos,
   bookmarksCount,
 }) => {
   return (
     <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-slate-950/85 border-b border-slate-800/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand */}
-        <div className="flex items-center gap-3">
-          <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 via-teal-600 to-sky-600 p-[1px] shadow-lg shadow-emerald-500/10">
+        <div
+          onClick={onOpenCandidatos}
+          className="flex items-center gap-3 cursor-pointer group"
+          title="Início / Explorador de Candidatos"
+        >
+          <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 via-teal-600 to-sky-600 p-[1px] shadow-lg shadow-emerald-500/10 group-hover:scale-105 transition-transform">
             <div className="w-full h-full bg-slate-950 rounded-[11px] flex items-center justify-center">
               <Landmark className="w-5 h-5 text-emerald-400" />
             </div>
@@ -43,6 +49,17 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Actions */}
         <div className="flex items-center gap-2 sm:gap-3">
+          {onOpenCandidatos && (
+            <button
+              onClick={onOpenCandidatos}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-sky-300 hover:text-white bg-slate-900/90 hover:bg-slate-800 border border-sky-500/30 hover:border-sky-400 rounded-lg transition-all cursor-pointer"
+              title="Explorador de Candidatos: Senadores, Deputados Federais e Presidente"
+            >
+              <Users className="w-3.5 h-3.5 text-sky-400" />
+              <span className="hidden sm:inline">Candidatos do Brasil</span>
+            </button>
+          )}
+
           {onOpenConsultarVoto && (
             <button
               onClick={onOpenConsultarVoto}

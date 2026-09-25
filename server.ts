@@ -4,6 +4,12 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
+import {
+  loadLegislativeCaches,
+  getSenadoSenatorFull,
+  getEleicoesCandidatos,
+  PRESIDENCIAVEIS_LIST,
+} from './serverLegislativo';
 
 dotenv.config();
 
@@ -253,6 +259,8 @@ const NOTAVEIS_POLITICOS: Record<string, any> = {
   'tabata amaral': {
     nomeCompleto: 'Tabata Claudia Amaral de Pontes',
     nomePolitico: 'Tabata Amaral',
+    papelEleitoral: 'Deputada Federal',
+    numeroEleitoral: 40,
     partido: {
       sigla: 'PSB',
       nome: 'Partido Socialista Brasileiro',
@@ -448,6 +456,8 @@ const NOTAVEIS_POLITICOS: Record<string, any> = {
   'nikolas ferreira': {
     nomeCompleto: 'Nikolas Ferreira de Oliveira',
     nomePolitico: 'Nikolas Ferreira',
+    papelEleitoral: 'Deputado Federal',
+    numeroEleitoral: 22,
     partido: {
       sigla: 'PL',
       nome: 'Partido Liberal',
@@ -641,6 +651,8 @@ const NOTAVEIS_POLITICOS: Record<string, any> = {
   'guilherme boulos': {
     nomeCompleto: 'Guilherme Castro Boulos',
     nomePolitico: 'Guilherme Boulos',
+    papelEleitoral: 'Deputado Federal',
+    numeroEleitoral: 50,
     partido: {
       sigla: 'PSOL',
       nome: 'Partido Socialismo e Liberdade',
@@ -834,6 +846,8 @@ const NOTAVEIS_POLITICOS: Record<string, any> = {
   'tarcisio de freitas': {
     nomeCompleto: 'Tarcísio Gomes de Freitas',
     nomePolitico: 'Tarcísio de Freitas',
+    papelEleitoral: 'Presidente da República',
+    numeroEleitoral: 10,
     partido: {
       sigla: 'REPUBLICANOS',
       nome: 'Republicanos',
@@ -928,6 +942,8 @@ const NOTAVEIS_POLITICOS: Record<string, any> = {
   'sergio moro': {
     nomeCompleto: 'Sergio Fernando Moro',
     nomePolitico: 'Sergio Moro',
+    papelEleitoral: 'Senador Federal',
+    numeroEleitoral: 44,
     partido: {
       sigla: 'UNIÃO',
       nome: 'União Brasil',
@@ -1109,6 +1125,365 @@ const NOTAVEIS_POLITICOS: Record<string, any> = {
       ],
     },
   },
+  'luiz inacio lula da silva': {
+    nomeCompleto: 'Luiz Inácio Lula da Silva',
+    nomePolitico: 'Lula',
+    papelEleitoral: 'Presidente da República',
+    numeroEleitoral: 13,
+    partido: {
+      sigla: 'PT',
+      nome: 'Partido dos Trabalhadores',
+      numeroEleitoral: 13,
+      federacaoOuColigacao: 'Federação Brasil da Esperança (PT, PCdoB, PV)',
+      historicoPartidario: 'Membro fundador e principal liderança histórica do Partido dos Trabalhadores desde 1980.',
+    },
+    espectroPolitico: {
+      posicao: 'Esquerda',
+      pontuacao: -65,
+      descricao:
+        'Liderança da centro-esquerda e esquerda democrática. Defende a centralidade do Estado na indução do crescimento econômico, fortalecimento de programas de transferência de renda (Bolsa Família), reindustrialização sustentável, soberania nacional e política externa multilateral.',
+      principaisPautas: [
+        'Combate à Fome, Desigualdade Social e Valorização do Salário Mínimo',
+        'Novo PAC e Investimentos Públicos em Infraestrutura',
+        'Sustentabilidade Ambiental, Transição Energética e Preservação da Amazônia',
+        'Fortalecimento da Saúde (SUS), Farmácia Popular e Educação Superior (Prouni/Fies)',
+      ],
+    },
+    cargoAtual: {
+      cargo: 'Presidente da República Federativa do Brasil',
+      uf: 'BR',
+      emExercicio: true,
+      periodoMandato: '2023 - 2027 (3º Mandato Presidencial)',
+      detalhes: 'Eleito para o terceiro mandato como Chefe de Estado e de Governo da República Federativa do Brasil.',
+    },
+    candidaturaAtual: {
+      isCandidato: true,
+      status: 'Presidente em Exercício / Candidatura à Reeleição',
+      cargoDisputado: 'Presidente da República',
+      detalhes: 'Articula a ampla frente política democrática para a disputa de recondução ao Palácio do Planalto.',
+    },
+    biografiaResumida:
+      'Nascido em Garanhuns (PE), migrou ainda jovem para São Paulo. Foi metalúrgico, líder sindical dos metalúrgicos do ABC paulista e deputado constituinte em 1988. Foi eleito Presidente da República por três mandatos históricos (2002, 2006 e 2022).',
+    fotoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Lula_oficial.jpg/330px-Lula_oficial.jpg',
+    cidadeNatal: 'Garanhuns - PE',
+    idade: 80,
+    profissao: 'Líder Sindical, Político e Chefe de Estado',
+    ultimosProjetosDeLei: [
+      {
+        tipoENumero: 'Mensagem Presidencial 14.818/2024',
+        ano: 2024,
+        titulo: 'Sanção da Lei do Programa Pé-de-Meia',
+        ementa: 'Sanção presidencial com garantia de recursos orçamentários do Fundo Fip-Médio para a poupança estudantil.',
+        tema: 'Educação Básica & Proteção à Juventude',
+        situacao: 'Sancionada e Regulamentada em Nível Nacional',
+        relevancia: 'Programa prioritário para reduzir o abandono escolar no ensino médio público.',
+        linkOficial: 'https://www.planalto.gov.br',
+      },
+      {
+        tipoENumero: 'Decreto 11.455/2023',
+        ano: 2023,
+        titulo: 'Novo Programa de Aceleração do Crescimento (Novo PAC)',
+        ementa: 'Institui diretrizes para a carteira de investimentos públicos e parcerias em transição ecológica, cidades sustentáveis e infraestrutura social.',
+        tema: 'Desenvolvimento Econômico & Investimento',
+        situacao: 'Em Execução Orçamentária',
+        relevancia: 'Eixo estruturante dos investimentos federais do governo.',
+        linkOficial: 'https://www.planalto.gov.br',
+      },
+    ],
+    investigacoesJudiciais: {
+      resumoGeral: 'Processos no âmbito da Operação Lava Jato foram anulados pelo Supremo Tribunal Federal em 2021 por incompetência territorial e suspeição declarada do juízo. Ficha limpa e plenos direitos políticos.',
+      possuiInvestigacoesAtivas: false,
+      casos: [
+        {
+          titulo: 'Anulação das Condenações de Curitiba pelo STF (HC 193.726)',
+          orgaoApurador: 'Supremo Tribunal Federal (Plenário)',
+          status: 'Absolvido / Anulado',
+          anoInicio: 2017,
+          anoConclusao: 2021,
+          descricao: 'Julgamento histórico do STF que reconheceu a nulidade absoluta dos atos decisórios da 13ª Vara Federal de Curitiba e a suspeição do ex-magistrado prolator.',
+          desfechoOuSituacao: 'O plenário do STF anulou integralmente as condenações e extinguiu as ações por ausência de justa causa e prescrição da pretensão punitiva.',
+        },
+      ],
+    },
+    posicionamentosEVotacoes: {
+      ativoEmCasaLegislativa: false,
+      justificativaNaoAtivo:
+        'Luiz Inácio Lula da Silva exerce a Chefia do Poder Executivo da União como Presidente da República. Suas deliberações e manifestações ocorrem via sanção ou veto a projetos de lei aprovados pelo Congresso, edição de medidas provisórias e mensagens constitucionais ao Parlamento.',
+      ultimasVotacoes: [],
+    },
+  },
+  'lula': {
+    nomeCompleto: 'Luiz Inácio Lula da Silva',
+    nomePolitico: 'Lula',
+    papelEleitoral: 'Presidente da República',
+    numeroEleitoral: 13,
+    partido: {
+      sigla: 'PT',
+      nome: 'Partido dos Trabalhadores',
+      numeroEleitoral: 13,
+      federacaoOuColigacao: 'Federação Brasil da Esperança (PT, PCdoB, PV)',
+      historicoPartidario: 'Membro fundador e principal liderança histórica do Partido dos Trabalhadores desde 1980.',
+    },
+    espectroPolitico: {
+      posicao: 'Esquerda',
+      pontuacao: -65,
+      descricao:
+        'Liderança da centro-esquerda e esquerda democrática. Defende a centralidade do Estado na indução do crescimento econômico, programas sociais e sustentabilidade.',
+      principaisPautas: [
+        'Combate à Fome e Desigualdade Social',
+        'Novo PAC e Infraestrutura',
+        'Transição Energética e Preservação da Amazônia',
+        'Fortalecimento da Saúde e Educação Pública',
+      ],
+    },
+    cargoAtual: {
+      cargo: 'Presidente da República Federativa do Brasil',
+      uf: 'BR',
+      emExercicio: true,
+      periodoMandato: '2023 - 2027 (3º Mandato Presidencial)',
+      detalhes: 'Eleito para o terceiro mandato como Chefe de Estado e de Governo da República.',
+    },
+    candidaturaAtual: {
+      isCandidato: true,
+      status: 'Presidente em Exercício / Reeleição',
+      cargoDisputado: 'Presidente da República',
+      detalhes: 'Articula a ampla frente política democrática para a disputa de recondução ao Palácio do Planalto.',
+    },
+    biografiaResumida:
+      'Metalúrgico, líder sindical do ABC paulista, deputado constituinte de 1988 e três vezes Presidente da República eleito pelo voto popular.',
+    fotoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Lula_oficial.jpg/330px-Lula_oficial.jpg',
+    cidadeNatal: 'Garanhuns - PE',
+    idade: 80,
+    profissao: 'Líder Sindical e Chefe de Estado',
+    ultimosProjetosDeLei: [],
+    investigacoesJudiciais: {
+      resumoGeral: 'Processos da Lava Jato anulados em definitivo pelo Supremo Tribunal Federal em 2021. Ficha limpa.',
+      possuiInvestigacoesAtivas: false,
+      casos: [],
+    },
+    posicionamentosEVotacoes: {
+      ativoEmCasaLegislativa: false,
+      justificativaNaoAtivo:
+        'Luiz Inácio Lula da Silva exerce a Chefia do Poder Executivo como Presidente da República. Delibera via sanções, vetos e medidas provisórias.',
+      ultimasVotacoes: [],
+    },
+  },
+  'rodrigo pacheco': {
+    nomeCompleto: 'Rodrigo Otavio Soares Pacheco',
+    nomePolitico: 'Rodrigo Pacheco',
+    papelEleitoral: 'Senador Federal',
+    numeroEleitoral: 55,
+    partido: {
+      sigla: 'PSD',
+      nome: 'Partido Social Democrático',
+      numeroEleitoral: 55,
+      federacaoOuColigacao: 'Sem federação',
+      historicoPartidario: 'Filiado ao MDB e DEM anteriormente, ingressando no PSD em 2021.',
+    },
+    espectroPolitico: {
+      posicao: 'Centro',
+      pontuacao: 10,
+      descricao:
+        'Perfil institucional moderado de centro. Atua na mediação de consensos e equilíbrio institucional entre os Poderes da República.',
+      principaisPautas: [
+        'Defesa da Estabilidade Institucional e Segurança Jurídica',
+        'Pacto Federativo e Renegociação da Dívida dos Estados',
+        'Apreciação das Reformas Econômicas Estruturantes',
+        'Fortalecimento da Advocacia e Prerrogativas Constitucionais',
+      ],
+    },
+    cargoAtual: {
+      cargo: 'Presidente do Senado Federal e do Congresso Nacional',
+      uf: 'MG',
+      emExercicio: true,
+      periodoMandato: '2019 - 2027 (Mandato de 8 Anos)',
+      detalhes: 'Preside o Congresso Nacional e a Mesa Diretora do Senado Federal.',
+    },
+    candidaturaAtual: {
+      isCandidato: true,
+      status: 'Senador Titular / Presidência do Senado ou Governo de MG',
+      cargoDisputado: 'Reeleição ao Senado ou Governo de Minas Gerais em 2026',
+      detalhes: 'Articula projeto político de protagonismo para o estado de Minas Gerais.',
+    },
+    biografiaResumida:
+      'Advogado criminalista formado pela PUC Minas, foi conselheiro federal da OAB, deputado federal (2015-2019) e eleito senador por Minas Gerais em 2018.',
+    fotoUrl: 'https://www.senado.leg.br/senadores/img/fotos-oficiais/senador5732.jpg',
+    cidadeNatal: 'Porto Velho - RO',
+    idade: 49,
+    profissao: 'Advogado e Jurista',
+    ultimosProjetosDeLei: [
+      {
+        tipoENumero: 'PLP 121/2024',
+        ano: 2024,
+        titulo: 'Programa de Pleno Pagamento de Dívidas dos Estados (Propag)',
+        ementa: 'Cria mecanismos de renegociação das dívidas dos estados com a União mediante entrega de ativos estaduais e investimentos em educação.',
+        tema: 'Pacto Federativo & Finanças Públicas',
+        situacao: 'Aprovado no Senado Federal',
+        relevancia: 'Pauta prioritária para Minas Gerais, São Paulo e Rio de Janeiro.',
+        linkOficial: 'https://www.senado.leg.br',
+      },
+    ],
+    investigacoesJudiciais: {
+      resumoGeral: 'Sem inquéritos ativos ou condenações. Ficha limpa perante a Justiça Eleitoral.',
+      possuiInvestigacoesAtivas: false,
+      casos: [],
+    },
+    posicionamentosEVotacoes: {
+      ativoEmCasaLegislativa: true,
+      casaLegislativa: 'Senado Federal',
+      ultimasVotacoes: [
+        {
+          data: '08/11/2025',
+          proposicao: 'PEC 45-A (Reforma Tributária)',
+          tema: 'Tributação',
+          ementa: 'Promulgação histórica da Reforma Tributária sobre o consumo.',
+          voto: 'Sim',
+          resultadoGeral: 'Promulgada como EC 132',
+          impacto: 'Conduziu a sessão solene de promulgação constitucional no Congresso Nacional.',
+        },
+        {
+          data: '12/06/2026',
+          proposicao: 'PL 2253/2022',
+          tema: 'Segurança Pública',
+          ementa: 'Fim das saídas temporárias de presos do semiaberto.',
+          voto: 'Sim',
+          resultadoGeral: 'Aprovado (Veto Derrubado)',
+          impacto: 'Presidiu a sessão conjunta do Congresso que confirmou a derrubada do veto.',
+        },
+      ],
+    },
+  },
+  'arthur lira': {
+    nomeCompleto: 'Arthur César Pereira de Lira',
+    nomePolitico: 'Arthur Lira',
+    papelEleitoral: 'Deputado Federal',
+    numeroEleitoral: 11,
+    partido: {
+      sigla: 'PP',
+      nome: 'Progressistas',
+      numeroEleitoral: 11,
+      federacaoOuColigacao: 'Sem federação',
+      historicoPartidario: 'Liderança histórica do Progressistas em Alagoas e no cenário federal.',
+    },
+    espectroPolitico: {
+      posicao: 'Centro-Direita',
+      pontuacao: 50,
+      descricao:
+        'Liderança pragmática de centro-direita. Articulador do Centrão e da governabilidade parlamentar na Câmara dos Deputados.',
+      principaisPautas: [
+        'Autonomia do Poder Legislativo e Prerrogativas Orçamentárias',
+        'Aprovação das Reformas Econômicas e Tributárias',
+        'Agronegócio e Logística Regional',
+        'Alocação Direta de Emendas Parlamentares',
+      ],
+    },
+    cargoAtual: {
+      cargo: 'Deputado Federal por Alagoas / Presidente da Câmara dos Deputados',
+      uf: 'AL',
+      emExercicio: true,
+      periodoMandato: '2023 - 2027 (4º Mandato Federal)',
+      detalhes: 'Presidente da Câmara dos Deputados, condutor das principais pautas econômicas e legislativas do país.',
+    },
+    candidaturaAtual: {
+      isCandidato: true,
+      status: 'Deputado Federal / Candidato ao Senado Federal em 2026',
+      cargoDisputado: 'Senador Federal por Alagoas',
+      detalhes: 'Articula candidatura a uma das duas vagas ao Senado Federal por Alagoas no pleito de 2026.',
+    },
+    biografiaResumida:
+      'Advogado e pecuarista alagoano, foi vereador em Maceió, deputado estadual e deputado federal titular por quatro legislaturas consecutivas.',
+    fotoUrl: 'https://www.camara.leg.br/internet/deputado/bandep/160541.jpg',
+    cidadeNatal: 'Maceió - AL',
+    idade: 56,
+    profissao: 'Advogado e Agropecuarista',
+    ultimosProjetosDeLei: [],
+    investigacoesJudiciais: {
+      resumoGeral: 'Inquéritos apurados no STF foram arquivados pela Primeira Turma da Corte por ausência de justa causa e rejeição de denúncias pela PGR.',
+      possuiInvestigacoesAtivas: false,
+      casos: [],
+    },
+    posicionamentosEVotacoes: {
+      ativoEmCasaLegislativa: true,
+      casaLegislativa: 'Câmara dos Deputados',
+      ultimasVotacoes: [
+        {
+          data: '15/12/2025',
+          proposicao: 'PEC 45-A (Reforma Tributária)',
+          tema: 'Tributos',
+          ementa: 'Reforma sobre o consumo aprovada na Câmara.',
+          voto: 'Artigo 17',
+          resultadoGeral: 'Aprovado com Ampla Maioria',
+          impacto: 'Como Presidente da Câmara, absteve-se do voto regimental conduzindo a deliberação histórica.',
+        },
+      ],
+    },
+  },
+  'jair bolsonaro': {
+    nomeCompleto: 'Jair Messias Bolsonaro',
+    nomePolitico: 'Jair Bolsonaro',
+    papelEleitoral: 'Presidente da República',
+    numeroEleitoral: 22,
+    partido: {
+      sigla: 'PL',
+      nome: 'Partido Liberal',
+      numeroEleitoral: 22,
+      federacaoOuColigacao: 'Sem federação',
+      historicoPartidario: 'Filiou-se ao PL em 2021 após passagens por PDC, PPR, PPB, PTB, PFL, PSC e PSL.',
+    },
+    espectroPolitico: {
+      posicao: 'Direita',
+      pontuacao: 90,
+      descricao:
+        'Liderança máxima da direita conservadora no Brasil. Defende patriotismo, liberdade econômica, desregulamentação, pautas pró-armamento, conservadorismo nos costumes e combate severo à criminalidade.',
+      principaisPautas: [
+        'Defesa da Família Tradicional e Valores Cristãos',
+        'Liberdade Econômica, Privatizações e Desregulamentação',
+        'Direito ao Porte e Posse de Armas por Cidadãos',
+        'Oposição ao Socialismo e Pautas Progressistas',
+      ],
+    },
+    cargoAtual: {
+      cargo: 'Ex-Presidente da República / Liderança Política do PL',
+      uf: 'BR',
+      emExercicio: false,
+      periodoMandato: 'Mandato Presidencial: 2019 - 2022',
+      detalhes: 'Ex-Presidente da República, atua como presidente de honra do Partido Liberal.',
+    },
+    candidaturaAtual: {
+      isCandidato: false,
+      status: 'Inelegível até 2030 (Decisões do TSE) / Líder Eleitoral',
+      cargoDisputado: 'Principal articulador de candidaturas da direita ao Senado, Câmara e Presidência',
+      detalhes: 'Articula apoios e coligações da bancada do PL em todos os estados do país.',
+    },
+    biografiaResumida:
+      'Capitão reformado do Exército Brasileiro, foi vereador no Rio de Janeiro e deputado federal por sete mandatos consecutivos (1991-2018). Foi o 38º Presidente da República Federativa do Brasil.',
+    fotoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Jair_Bolsonaro_foto_oficial.jpg/330px-Jair_Bolsonaro_foto_oficial.jpg',
+    cidadeNatal: 'Glicério - SP',
+    idade: 71,
+    profissao: 'Militar da Reserva e Político',
+    ultimosProjetosDeLei: [],
+    investigacoesJudiciais: {
+      resumoGeral: 'Condenações no Tribunal Superior Eleitoral declarando inelegibilidade até 2030. Inquéritos em trâmite no STF em fase instrutória.',
+      possuiInvestigacoesAtivas: true,
+      casos: [
+        {
+          titulo: 'Julgamento de Inelegibilidade no TSE (Reunião com Embaixadores)',
+          orgaoApurador: 'Tribunal Superior Eleitoral (TSE)',
+          status: 'Condenado (Inelegibilidade)',
+          anoInicio: 2022,
+          anoConclusao: 2023,
+          descricao: 'Ação de Investigação Judicial Eleitoral sobre declarações relativas ao sistema eleitoral em encontro com embaixadores.',
+          desfechoOuSituacao: 'O TSE declarou a inelegibilidade por 8 anos até 2030 por 5 votos a 2.',
+        },
+      ],
+    },
+    posicionamentosEVotacoes: {
+      ativoEmCasaLegislativa: false,
+      justificativaNaoAtivo:
+        'Jair Messias Bolsonaro exerceu a Presidência da República (2019-2022) e atuou como Deputado Federal (1991-2018). Atualmente não exerce mandato parlamentar deliberativo.',
+      ultimasVotacoes: [],
+    },
+  },
 };
 
 // Helper: Fetch Wikipedia summary & opensearch
@@ -1250,6 +1625,20 @@ function calculateAge(birthDateStr?: string): number | undefined {
   }
 }
 
+// Candidate Directory & Electoral Explorer API
+app.get('/api/eleicoes/candidatos', (req, res) => {
+  const papel = (req.query.papel as string) || 'todos';
+  const uf = (req.query.uf as string) || 'todas';
+  const busca = (req.query.busca as string) || '';
+
+  const candidatos = getEleicoesCandidatos(papel, uf, busca);
+  res.json({
+    success: true,
+    total: candidatos.length,
+    candidatos,
+  });
+});
+
 // Search & Dossier Handler
 app.post('/api/politico/consultar', async (req, res) => {
   const { nome } = req.body;
@@ -1270,14 +1659,22 @@ app.post('/api/politico/consultar', async (req, res) => {
       const normK = k
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '');
-      return normalizedQuery.includes(normK) || normK.includes(normalizedQuery);
+      return normalizedQuery === normK || normalizedQuery.includes(normK) || normK.includes(normalizedQuery);
     });
 
     let baseData: any = curatedMatchKey
       ? JSON.parse(JSON.stringify(NOTAVEIS_POLITICOS[curatedMatchKey]))
       : null;
 
-    // 2. If not in curated list, query official Câmara dos Deputados Dados Abertos API
+    // 2. Query official Senado Federal Dados Abertos API (81 Senadores)
+    if (!baseData) {
+      const senado = await getSenadoSenatorFull(queryName, PARTIDOS_MAP);
+      if (senado) {
+        baseData = senado;
+      }
+    }
+
+    // 3. Query official Câmara dos Deputados Dados Abertos API (513 Deputados)
     const camara = !baseData ? await getCamaraDeputyFull(queryName) : null;
 
     if (camara?.deputado) {
@@ -1295,6 +1692,8 @@ app.post('/api/politico/consultar', async (req, res) => {
       baseData = {
         nomeCompleto: camara.detalhe?.nomeCivil || camara.deputado.nome,
         nomePolitico: camara.deputado.nome,
+        papelEleitoral: 'Deputado Federal',
+        numeroEleitoral: partyMeta.numeroEleitoral,
         partido: {
           sigla: sigla,
           nome: partyMeta.nome,
@@ -1478,12 +1877,25 @@ app.post('/api/politico/consultar', async (req, res) => {
       let nonPolProfile: any = null;
 
       try {
-        const verifyPrompt = `Você é um analista político e biográfico brasileiro.
-Analise detalhadamente a pessoa: "${queryName}".
+        const verifyPrompt = `Você é o mais completo analista eleitoral e legislativo do Brasil.
+Analise a pessoa: "${queryName}".
 Informações de contexto da Wikipédia (se disponíveis):
 - Título: ${wikiData?.title || 'N/A'}
 - Descrição: ${wikiData?.description || 'N/A'}
 - Resumo biográfico: ${wikiData?.extract || 'N/A'}
+
+REGRAS DE CLASSIFICAÇÃO:
+1. "isPoliticoBrasileiro" DEVE ser TRUE se essa pessoa:
+   - É candidata, pré-candidata ou figura em disputa eleitoral no Brasil para:
+     * PRESIDENTE DA REPÚBLICA (ou Vice-Presidente)
+     * SENADOR(A) FEDERAL (ou Suplente)
+     * DEPUTADO(A) FEDERAL
+     * Governador(a), Deputado(a) Estadual/Distrital, Prefeito(a), Vereador(a)
+   - Exerce ou já exerceu qualquer mandato eletivo ou cargo público de liderança partidária/governamental no Brasil.
+   - Cumpra a expectativa: Todos os candidatos do Brasil de todos os partidos e estados devem ser encontrados e descritos com precisão institucional!
+2. "isPoliticoBrasileiro" DEVE ser FALSE se e somente se for pessoa de fora da política (jogador de futebol, ator/atriz, cantor, apresentador de entretenimento, influenciador, empresário privado sem atividade eleitoral, estrangeiro sem vínculo ou cidadão comum sem candidatura no Brasil).
+3. Se "isPoliticoBrasileiro" for FALSE, "motivoNaoPolitico" deve deixar claro e inequívoco que a pessoa não exerce atividade política, mandato eletivo ou candidatura no Brasil. Deixe "politicoDossier" como null.
+4. Se "isPoliticoBrasileiro" for TRUE, preencha "politicoDossier" de forma factual, equilibrada e institucional.
 
 Responda ESTRITAMENTE em formato JSON com o seguinte schema:
 {
@@ -1496,8 +1908,10 @@ Responda ESTRITAMENTE em formato JSON com o seguinte schema:
   "motivoNaoPolitico": string,
   "politicoDossier": {
     "nomePolitico": string,
+    "papelEleitoral": "Presidente da República" | "Senador Federal" | "Deputado Federal" | "Governador" | "Liderança Política",
     "partidoSigla": string,
     "partidoNome": string,
+    "numeroEleitoral": number,
     "cargo": string,
     "uf": string,
     "emExercicio": boolean,
@@ -1552,22 +1966,16 @@ Responda ESTRITAMENTE em formato JSON com o seguinte schema:
       }
     ]
   }
-}
-
-Regras:
-1. "isPoliticoBrasileiro" DEVE ser TRUE APENAS se essa pessoa exerce ou já exerceu mandato eletivo (deputado, senador, governador, prefeito, vereador, presidente) ou cargo de ministro de Estado no Brasil.
-2. "isPoliticoBrasileiro" DEVE ser FALSE se a pessoa for atleta, futebolista, cantor(a), ator/atriz, apresentador(a), empresário(a) privado sem mandato, jornalista, influenciador(a), celebridade, político estrangeiro ou cidadão comum sem cargo público oficial no Brasil.
-3. Se "isPoliticoBrasileiro" for FALSE, "motivoNaoPolitico" deve deixar claro e inequívoco que a pessoa não exerce atividade política, mandato eletivo ou cargo parlamentar no Brasil. Deixe "politicoDossier" como null.
-4. Se "isPoliticoBrasileiro" for TRUE, preencha "politicoDossier" de forma factual, equilibrada e institucional.`;
+}`;
 
         const geminiPromise = ai.models.generateContent({
           model: 'gemini-3.6-flash',
           contents: verifyPrompt,
         });
 
-        // 6 second timeout protection
+        // 12 second timeout protection
         const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Timeout de consulta')), 6000)
+          setTimeout(() => reject(new Error('Timeout de consulta')), 12000)
         );
 
         const geminiRes: any = await Promise.race([geminiPromise, timeoutPromise]);
@@ -1602,7 +2010,7 @@ Regras:
             const sigla = (pd.partidoSigla || 'S.PART.').toUpperCase();
             const partyMeta = PARTIDOS_MAP[sigla] || {
               nome: pd.partidoNome || `Partido ${sigla}`,
-              numeroEleitoral: 0,
+              numeroEleitoral: pd.numeroEleitoral || 0,
               espectroDefault: {
                 posicao: pd.espectroPosicao || 'Centro',
                 pontuacao: pd.espectroPontuacao || 0,
@@ -1610,13 +2018,25 @@ Regras:
               },
             };
 
+            const detectedPapel =
+              pd.papelEleitoral ||
+              (pd.cargo?.toLowerCase().includes('senad') || pd.cargoDisputado?.toLowerCase().includes('senad')
+                ? 'Senador Federal'
+                : pd.cargo?.toLowerCase().includes('deputad') || pd.cargoDisputado?.toLowerCase().includes('deputad')
+                ? 'Deputado Federal'
+                : pd.cargo?.toLowerCase().includes('presid') || pd.cargoDisputado?.toLowerCase().includes('presid')
+                ? 'Presidente da República'
+                : 'Liderança Política');
+
             baseData = {
               nomeCompleto: parsed.nomeCompleto || queryName,
               nomePolitico: pd.nomePolitico || queryName,
+              papelEleitoral: detectedPapel,
+              numeroEleitoral: pd.numeroEleitoral || partyMeta.numeroEleitoral,
               partido: {
                 sigla,
                 nome: pd.partidoNome || partyMeta.nome,
-                numeroEleitoral: partyMeta.numeroEleitoral,
+                numeroEleitoral: pd.numeroEleitoral || partyMeta.numeroEleitoral,
                 federacaoOuColigacao: partyMeta.federacao || 'Sem federação',
                 historicoPartidario: `Filiação partidária registrada no ${sigla}.`,
               },
@@ -1999,4 +2419,5 @@ if (process.env.NODE_ENV === 'production') {
 
 app.listen(port, '0.0.0.0', () => {
   console.log(`Radar Político Brasil backend running on http://0.0.0.0:${port}`);
+  loadLegislativeCaches().catch((err) => console.warn('[Cache] Erro ao carregar caches:', err));
 });

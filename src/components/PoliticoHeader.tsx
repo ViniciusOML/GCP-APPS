@@ -116,6 +116,32 @@ export const PoliticoHeader: React.FC<PoliticoHeaderProps> = ({
 
           {/* Key tags row */}
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
+            {/* Papel Eleitoral Badge */}
+            {(data.papelEleitoral || cargoAtual.cargo) && (
+              <span
+                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-extrabold uppercase tracking-wide border shadow-sm ${
+                  (data.papelEleitoral?.toLowerCase().includes('presid') || cargoAtual.cargo?.toLowerCase().includes('presid'))
+                    ? 'bg-amber-500/15 text-amber-300 border-amber-500/40'
+                    : (data.papelEleitoral?.toLowerCase().includes('senad') || cargoAtual.cargo?.toLowerCase().includes('senad'))
+                    ? 'bg-purple-500/15 text-purple-300 border-purple-500/40'
+                    : 'bg-sky-500/15 text-sky-300 border-sky-500/40'
+                }`}
+              >
+                {(data.papelEleitoral?.toLowerCase().includes('presid') || cargoAtual.cargo?.toLowerCase().includes('presid'))
+                  ? '👑 Presidente da República'
+                  : (data.papelEleitoral?.toLowerCase().includes('senad') || cargoAtual.cargo?.toLowerCase().includes('senad'))
+                  ? '🏛️ Senador da República'
+                  : '👥 Deputado(a) Federal'}
+              </span>
+            )}
+
+            {/* Número Eleitoral Badge */}
+            {(data.numeroEleitoral || partido.numeroEleitoral) ? (
+              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-xl bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 text-xs font-mono font-bold shadow-sm">
+                Nº {data.numeroEleitoral || partido.numeroEleitoral}
+              </span>
+            ) : null}
+
             {/* Cargo badge */}
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-800/90 text-slate-200 border border-slate-700 text-xs font-bold shadow-sm">
               <Building className="w-3.5 h-3.5 text-blue-400" />

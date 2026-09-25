@@ -1,3 +1,17 @@
+export type PapelEleitoral = 'Presidente' | 'Senador' | 'Deputado Federal' | 'Outro';
+
+export interface CandidatoResumo {
+  id: string | number;
+  nome: string;
+  nomeCivil?: string;
+  partido: string;
+  numeroEleitoral?: number;
+  uf: string;
+  papel: 'Presidente' | 'Senador' | 'Deputado Federal';
+  fotoUrl?: string | null;
+  cargoAtual?: string;
+}
+
 export interface ProjetoDeLei {
   tipoENumero: string;
   ano: number;
@@ -87,6 +101,8 @@ export interface AtividadeLegislativaVotacoes {
 export interface PoliticoData {
   nomeCompleto: string;
   nomePolitico: string;
+  papelEleitoral?: 'Presidente da República' | 'Senador Federal' | 'Deputado Federal' | string;
+  numeroEleitoral?: number;
   partido: PartidoInfo;
   espectroPolitico: EspectroInfo;
   cargoAtual: CargoInfo;

@@ -8,6 +8,7 @@ import {
   Loader2,
   ShieldCheck,
   Scale,
+  Users,
 } from 'lucide-react';
 import { Navbar } from './components/Navbar';
 import { SearchBar } from './components/SearchBar';
@@ -19,6 +20,7 @@ import { InvestigacoesAcusacoesCard } from './components/InvestigacoesAcusacoesC
 import { VotacoesPosicionamentosCard } from './components/VotacoesPosicionamentosCard';
 import { PessoaNaoPoliticaCard } from './components/PessoaNaoPoliticaCard';
 import { FontesVerificadasCard } from './components/FontesVerificadasCard';
+import { CandidatosBrasilExplorer } from './components/CandidatosBrasilExplorer';
 import { ComparadorModal } from './components/ComparadorModal';
 import { BookmarksModal } from './components/BookmarksModal';
 import { ConsultarVotoModal } from './components/ConsultarVotoModal';
@@ -165,6 +167,11 @@ export default function App() {
         onOpenCompare={() => setIsCompareOpen(true)}
         onOpenBookmarks={() => setIsBookmarksOpen(true)}
         onOpenConsultarVoto={() => setIsConsultarVotoOpen(true)}
+        onOpenCandidatos={() => {
+          setCurrentPolitico(null);
+          setPessoaNaoPolitica(null);
+          window.scrollTo({ top: 380, behavior: 'smooth' });
+        }}
         bookmarksCount={bookmarks.length}
       />
 
@@ -174,7 +181,7 @@ export default function App() {
         <section className="text-center space-y-4 max-w-3xl mx-auto pt-2 sm:pt-6">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-xs font-semibold">
             <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Auditoria Cidadã &bull; Votações em Plenário &bull; Dados Abertos</span>
+            <span>Auditoria Cidadã &bull; Presidente, Senadores e Deputados &bull; Dados Abertos</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
@@ -185,12 +192,13 @@ export default function App() {
           </h2>
 
           <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Consulte o <strong>partido atual</strong>, <strong>cargo</strong>,{' '}
-            <strong>últimas 10 votações em plenário</strong>, <strong>inquéritos e investigações</strong>,{' '}
-            <strong>orientação ideológica</strong> e <strong>projetos de lei</strong>.
+            Consulte e audite qualquer candidato(a) do Brasil em todos os papéis eletivos: <strong>Presidente</strong>,{' '}
+            <strong>Senadores da República</strong> (81 vagas nos 26 estados + DF) e{' '}
+            <strong>Deputados Federais</strong> (513 cadeiras). Apuração de <strong>últimas 10 votações nominais</strong>,{' '}
+            <strong>inquéritos ético-judiciais</strong>, <strong>partido e número eleitoral</strong>.
           </p>
 
-          {/* Search Bar (Clean - quick suggestions removed) */}
+          {/* Search Bar with live autocomplete */}
           <div className="pt-2">
             <SearchBar
               onSearch={handleSearch}
@@ -286,12 +294,54 @@ export default function App() {
               dadosAbertosId={currentPolitico.dadosAbertosId}
               cargo={currentPolitico.cargoAtual.cargo}
             />
+
+            {/* Quick Link to Explore Other Candidates or Audit Bill Votes */}
+            <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-7 text-center space-y-4 shadow-xl">
+              <div className="space-y-1">
+                <h4 className="text-base sm:text-lg font-bold text-white">
+                  Auditar Outros Candidatos ou Consultar Votações de Leis
+                </h4>
+                <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
+                  Explore todos os candidatos a Presidente da República, Senadores nos 26 estados + DF e Deputados Federais em todo o Brasil.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCurrentPolitico(null);
+                    setPessoaNaoPolitica(null);
+                    window.scrollTo({ top: 380, behavior: 'smooth' });
+                  }}
+                  className="px-5 py-2.5 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/30 text-sky-300 font-bold text-xs sm:text-sm transition-all shadow-md cursor-pointer flex items-center gap-2"
+                >
+                  <Users className="w-4 h-4 text-sky-400" />
+                  <span>Explorar Todos os Candidatos do Brasil</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setIsConsultarVotoOpen(true)}
+                  className="px-5 py-2.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 font-bold text-xs sm:text-sm transition-all shadow-md cursor-pointer flex items-center gap-2"
+                >
+                  <Vote className="w-4 h-4 text-emerald-400" />
+                  <span>Auditar Voto por Projeto de Lei</span>
+                </button>
+              </div>
+            </div>
           </div>
         )}
 
         {/* Empty State / Welcome Guide when no search has been made yet */}
         {!currentPolitico && !pessoaNaoPolitica && !isLoading && !error && (
-          <section className="pt-4 space-y-8">
+          <section className="pt-2 space-y-8">
+            {/* Direct Official Candidate Explorer for all Roles & States */}
+            <CandidatosBrasilExplorer
+              onSelectCandidato={(nome) => handleSearch(nome)}
+              isLoadingTarget={isLoading}
+            />
+
             {/* 5 Pillars Card Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
               <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5 space-y-2 hover:border-slate-700 transition-colors">
